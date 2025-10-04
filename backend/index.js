@@ -76,6 +76,23 @@ const Product = mongoose.model("Product", {
   avilable: { type: Boolean, default: true },
 });
 
+// Schema for creating Order model
+const Order = mongoose.model("Order", {
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "Users", required: true },
+  items: [
+    {
+      productId: { type: Number, required: true },
+      name: { type: String, required: true },
+      quantity: { type: Number, required: true },
+      price: { type: Number, required: true },
+      image: { type: String },
+    }
+  ],
+  total: { type: Number, required: true },
+  status: { type: String, default: "Placed" },
+  date: { type: Date, default: Date.now },
+});
+
 
 // ROOT API Route For Testing
 app.get("/", (req, res) => {
@@ -238,6 +255,52 @@ app.post("/removeproduct", async (req, res) => {
   await Product.findOneAndDelete({ id: req.body.id });
   console.log("Removed");
   res.json({ success: true, name: req.body.name })
+});
+
+// Place a new order
+app.post('/orders', fetchuser, async (req, res) => {
+  try {
+    const { items, total } = req.body;
+    const order = new Order({
+      userId: req.user.id,
+      items,
+      total,
+    });
+    await order.save();
+    res.status(201).json({ success: true, order });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Get all orders for a user
+app.get('/orders/:userId', fetchuser, async (req, res) => {
+  try {
+    // Only allow users to fetch their own orders
+    if (req.user.id !== req.params.userId) {
+      return res.status(403).json({ success: false, error: 'Unauthorized' });
+    }
+    const orders = await Order.find({ userId: req.params.userId }).sort({ date: -1 });
+    res.json({ success: true, orders });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Endpoint to clear user's cart
+app.post('/clearcart', fetchuser, async (req, res) => {
+  try {
+    let userData = await Users.findOne({ _id: req.user.id });
+    let cart = {};
+    for (let i = 0; i < 300; i++) {
+      cart[i] = 0;
+    }
+    userData.cartData = cart;
+    await Users.findOneAndUpdate({ _id: req.user.id }, { cartData: cart });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 // Starting Express Server

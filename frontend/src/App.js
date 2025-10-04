@@ -11,6 +11,7 @@ import kid_banner from "./Components/Assets/banner_kids.png";
 import LoginSignup from "./Pages/LoginSignup";
 import SearchResults from "./Pages/SearchResults";
 import Checkout from "./Pages/Checkout";
+import OrderHistory from "./Pages/OrderHistory";
 
 export const backend_url = 'http://localhost:4000';
 export const currency = '₹';
@@ -33,6 +34,7 @@ function App() {
           <Route path="/login" element={<LoginSignup/>} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/orders" element={<OrderHistory />} />
         </Routes>
         <Footer />
       </Router>

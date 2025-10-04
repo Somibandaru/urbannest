@@ -2,7 +2,7 @@ import React from 'react'
 import './Item.css'
 import { Link } from 'react-router-dom'
 import { backend_url, currency } from '../../App'
-
+// shows products in home page
 const Item = (props) => {
   return (
     <div className='item'>

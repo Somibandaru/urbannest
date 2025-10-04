@@ -18,7 +18,7 @@ const AdminLogin = () => {
     const found = ADMINS.find(a => a.username === form.username && a.password === form.password);
     if (found) {
       localStorage.setItem("admin-auth", form.username);
-      navigate("/");
+      window.location.href = "/";
     } else {
       setError("Invalid credentials");
     }

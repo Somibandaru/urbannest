@@ -1,7 +1,7 @@
 import React from 'react'
 import './NewCollections.css'
 import Item from '../Item/Item'
-
+// shows new collections in home page
 const NewCollections = (props) => {
   return (
     <div className='new-collections'>

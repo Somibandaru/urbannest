@@ -12,3 +12,4 @@ const Breadcrums = (props) => {
 }
 
 export default Breadcrums
+// shows navigation path on product pages
